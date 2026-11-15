@@ -1,44 +1,138 @@
-fruits = ["apple", "banana", "cherry", "date"]
+# List is mutable , ordered , allows duplicate
+list_1 = ["banana", "cherry", "apple"]
+print(list_1)
 
-# Indexing and slicing
-print(fruits[0], fruits[-1])        # first, last
-print(fruits[1:3])                  # ['banana', 'cherry']
-print(fruits[::-1])                 # reversed copy
-print(fruits[::2])                  # every 2nd item
+# Or create an empty list with the list function
+list_2 = list()
+print(list_2)
 
-# Adding and removing
-fruits.insert(1, "mango")           # insert at index
-fruits.extend(["kiwi", "lime"])     # add many
-fruits.remove("banana")             # remove by value
-last = fruits.pop()                 # remove and return last
-del fruits[0]                       # remove by index
+# Lists allow different data types
+list_3 = [5, True, "apple"]
+print(list_3)
 
-# Searching and counting
-print("kiwi" in fruits)
-print(fruits.index("cherry"))
-print([1, 2, 2, 3].count(2))
+# Lists allow duplicates
+list_4 = [0, 0, 1, 1]
+print(list_4)
 
-# Sorting
-nums = [4, 1, 7, 3]
-print(sorted(nums, reverse=True))   # new list, original unchanged
-words = ["pear", "fig", "banana"]
-words.sort(key=len)                 # sort by length
+#access elements
 
-# Comprehensions with conditions
-evens = [n for n in range(20) if n % 2 == 0]
-labels = ["even" if n % 2 == 0 else "odd" for n in range(5)]
-matrix = [[i * j for j in range(1, 4)] for i in range(1, 4)]
+print(list_1[0])
+print(list_1[-1])
+print(list_1[-3])
 
-# Useful built-ins
-print(sum(nums), min(nums), max(nums), len(nums))
-for i, f in enumerate(words, start=1):
-    print(i, f)
-for a, b in zip([1, 2, 3], ["x", "y", "z"]):
-    print(a, b)
+# Lists can be altered after their creation
+list_1[2] = "lemon"
+print(list_1)
 
-# Copy pitfall
-a = [1, 2, 3]
-b = a            # same list, not a copy!
-b.append(4)
-print(a)         # [1, 2, 3, 4]
-c = a.copy()     # real (shallow) copy
+my_list = ["banana", "cherry", "apple"]
+
+# len() : get the number of elements in a list
+print("Length:", len(my_list))
+
+# append() : adds an element to the end of the list
+my_list.append("orange")
+
+# insert() : adds an element at the specified position
+my_list.insert(1, "blueberry")
+print(my_list)
+
+# pop() : removes and returns the item at the given position, default is the last item
+item = my_list.pop()
+print("Popped item: ", item)
+
+# remove() : removes an item from the list
+my_list.remove("cherry") # Value error if not in the list
+print(my_list)
+
+# clear() : removes all items from the list
+my_list.clear()
+print(my_list)
+
+# reverse() : reverse the items
+my_list = ["banana", "cherry", "apple"]
+my_list.reverse()
+print('Reversed: ', my_list)
+
+# sort() : sort items in ascending order
+my_list.sort()
+print('Sorted: ', my_list)
+
+# use sorted() to get a new list, and leave the original unaffected.
+# sorted() works on any iterable type, not just lists
+my_list = ["banana", "cherry", "apple"]
+new_list = sorted(my_list)
+
+# create list with repeated elements
+list_with_zeros = [0] * 5
+print(list_with_zeros)
+
+# concatenation
+list_concat = list_with_zeros + my_list
+print(list_concat)
+
+# convert string to list
+string_to_list = list('Hello')
+print(string_to_list)
+
+#coping a list
+
+list_org = ["banana", "cherry", "apple"]
+
+# this just copies the reference to the list
+list_copy = list_org
+
+# now modifying the copy also affects the original
+list_copy.append(True)
+print(list_copy)
+print(list_org)
+
+list_org = ["banana", "cherry", "apple"]
+
+list_copy = list_org.copy()
+# list_copy = list(list_org)
+# list_copy = list_org[:]
+
+# now modifying the copy does not affect the original
+list_copy.append(True)
+print(list_copy)
+print(list_org)
+
+#iterrating
+for i in list_1:
+    print(i)
+
+#check if an element exist
+
+if "banana" in list_1:
+    print("yes")
+else:
+    print("no")
+
+#Slicing
+a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+b = a[1:3]
+print(b)
+b = a[2:] 
+print(b)
+b = a[:3] 
+print(b)
+a[0:3] = [0] 
+print(a)
+b = a[::2]
+print(b)
+a = a[::-1]
+print(a)
+b = a[:] 
+print(b)
+
+#list comprehension
+
+a = [1, 2, 3, 4, 5, 6, 7, 8]
+b = [i * i for i in a] # squares each element
+print(b)
+
+#nested list
+
+a = [[1, 2], [3, 4]]
+print(a)
+print(a[0])

@@ -1,30 +1,62 @@
-# Threads: share memory, good for I/O-bound work (network, files, waiting)
-# Processes: separate memory, good for CPU-bound work (heavy calculations)
-# The GIL lets only one thread run Python bytecode at a time,
-# so threads don't speed up CPU-heavy code.
+#Threading vs Multiprocessing
 
-import time
+#Threading 
+
 from threading import Thread
+
+def square_numbers():
+    for i in range(1000):
+        result = i * i
+
+        
+if __name__ == "__main__":        
+    threads = []
+    num_threads = 10
+
+    # create threads and asign a function for each thread
+    for i in range(num_threads):
+        thread = Thread(target=square_numbers)
+        threads.append(thread)
+
+    # start all threads
+    for thread in threads:
+        thread.start()
+
+    # wait for all threads to finish
+    # block the main thread until these threads are finished
+    for thread in threads:
+        thread.join()
+
+
+
+#Multiprocessing
+ 
 from multiprocessing import Process
+import os
 
-def cpu_task(n=5_000_000):
-    total = 0
-    for i in range(n):
-        total += i * i
 
-def timed(label, runner):
-    start = time.time()
-    runner()
-    print(f"{label}: {time.time() - start:.2f}s")
+def square_numbers():
+    for i in range(1000):
+        result = i * i
 
-def run_threads():
-    ts = [Thread(target=cpu_task) for _ in range(4)]
-    [t.start() for t in ts]; [t.join() for t in ts]
-
-def run_processes():
-    ps = [Process(target=cpu_task) for _ in range(4)]
-    [p.start() for p in ps]; [p.join() for p in ps]
 
 if __name__ == "__main__":
-    timed("4 threads", run_threads)        # about as slow as sequential
-    timed("4 processes", run_processes)    # noticeably faster on multi-core
+    processes = []
+    num_processes = os.cpu_count()
+
+    # create processes and asign a function for each process
+    for i in range(num_processes):
+        process = Process(target=square_numbers)
+        processes.append(process)
+
+    # start all processes
+    for process in processes:
+        process.start()
+
+    # wait for all processes to finish
+    # block the main thread until these processes are finished
+    for process in processes:
+        process.join()
+
+
+    

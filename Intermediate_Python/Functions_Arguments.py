@@ -1,51 +1,179 @@
-# Positional, keyword, default
-def greet(name, greeting="Hello"):
-    return f"{greeting}, {name}!"
+#function parameters and function arguments
 
-print(greet("Sam"))
-print(greet(greeting="Hi", name="Sam"))
 
-# Positional-only (/) and keyword-only (*)
-def f(a, b, /, c, *, d):
+def print_name(name): # name is the parameter
+    print(name)
+
+print_name('Alex') # 'Alex' is the argument
+
+
+#Positional and keyword arguments
+
+
+def foo(a, b, c):
+    print(a, b, c)
+    
+# positional arguments
+foo(1, 2, 3)
+
+# keyword arguments
+foo(a=1, b=2, c=3)
+foo(c=3, b=2, a=1) # Note that the order is not important here
+
+# mix of both
+foo(1, b=2, c=3)
+
+# This is not allowed:
+# foo(1, b=2, 3) # positional argument after keyword argument
+# foo(1, b=2, a=3) # multiple values for argument 'a'
+
+
+#Default arguments
+
+
+# default arguments
+def foo(a, b, c, d=4):
     print(a, b, c, d)
 
-f(1, 2, 3, d=4)
-f(1, 2, c=3, d=4)
-# f(a=1, b=2, c=3, d=4)   # error: a and b are positional-only
+foo(1, 2, 3, 4)
+foo(1, b=2, c=3, d=100)
 
-# *args and **kwargs
-def show(*args, **kwargs):
-    print(args)        # tuple
-    print(kwargs)      # dict
+# not allowed: default arguments must be at the end
+# def foo(a, b=2, c, d=4):
+#     print(a, b, c, d)
 
-show(1, 2, 3, x=10, y=20)
 
-# Unpacking into a call
-def add3(a, b, c): return a + b + c
-print(add3(*[1, 2, 3]))
-print(add3(**{"a": 1, "b": 2, "c": 3}))
 
-# Mutable default argument trap
-def bad(item, bucket=[]):
-    bucket.append(item); return bucket
-print(bad(1), bad(2))        # [1, 2] [1, 2] (shared list!)
+#Variable-length arguments
 
-def good(item, bucket=None):
-    if bucket is None:
-        bucket = []
-    bucket.append(item); return bucket
 
-# Pass-by-object-reference behavior
-def modify(lst, num):
-    lst.append(99)       # mutates the original list
-    num += 1             # only rebinds the local name
+def foo(a, b, *args, **kwargs):
+    print(a, b)
+    for arg in args:
+        print(arg)
+    for kwarg in kwargs:
+        print(kwarg, kwargs[kwarg])
 
-my_list, my_num = [1], 5
-modify(my_list, my_num)
-print(my_list, my_num)   # [1, 99] 5
+# 3, 4, 5 are combined into args
+# six and seven are combined into kwargs
+foo(1, 2, 3, 4, 5, six=6, seven=7)
+print()
 
-# Variable scope
-x = 10
-def change():
-    global x
-    x = 20
+# omitting of args or kwargs is also possible
+foo(1, 2, three=3)
+
+
+#Forced keyword arguments
+
+
+def foo(a, b, *, c, d):
+    print(a, b, c, d)
+
+foo(1, 2, c=3, d=4)
+# not allowed:
+# foo(1, 2, 3, 4)
+
+# arguments after variable-length arguments must be keyword arguments
+def foo(*args, last):
+    for arg in args:
+        print(arg)
+    print(last)
+
+foo(8, 9, 10, last=50)
+
+
+#Unpacking into agruments
+
+
+def foo(a, b, c):
+    print(a, b, c)
+
+
+# list/tuple unpacking, length must match
+my_list = [4, 5, 6] # or tuple
+foo(*my_list)
+
+# dict unpacking, keys and length must match
+my_dict = {'a': 1, 'b': 2, 'c': 3}
+foo(**my_dict)
+
+# my_dict = {'a': 1, 'b': 2, 'd': 3} 
+
+
+#Local vs global variables
+
+
+def foo1():
+    x = number # global variable can only be accessed here
+    print('number in function:', x)
+
+number = 0
+foo1()
+
+# modifying the global variable
+def foo2():
+    global number # global variable can now be accessed and modified
+    number = 3
+
+print('number before foo2(): ', number)
+foo2() # modifies the global variable
+print('number after foo2(): ', number)
+
+
+#Parameter passing
+
+
+# immutable objects -> no change
+def foo(x):
+    x = 5 # x += 5 also no effect since x is immutable and a new variable must be created
+
+var = 10
+print('var before foo():', var)
+foo(var)
+print('var after foo():', var)
+
+# mutable objects -> change
+def foo(a_list):
+    a_list.append(4)
+    
+my_list = [1, 2, 3]
+print('my_list before foo():', my_list)
+foo(my_list)
+print('my_list after foo():', my_list)
+
+# immutable objects within a mutable object -> change
+def foo(a_list):
+    a_list[0] = -100
+    a_list[2] = "Paul"
+    
+my_list = [1, 2, "Max"]
+print('my_list before foo():', my_list)
+foo(my_list)
+print('my_list after foo():', my_list)
+
+# Rebind a mutable reference -> no change
+def foo(a_list):
+    a_list = [50, 60, 70] # a_list is now a new local variable within the function
+    a_list.append(50)
+    
+my_list = [1, 2, 3]
+print('my_list before foo():', my_list)
+foo(my_list)
+print('my_list after foo():', my_list)
+
+# another example with rebinding references:
+def foo(a_list):
+    a_list += [4, 5] # this chanches the outer variable
+    
+def bar(a_list):
+    a_list = a_list + [4, 5] # this rebinds the reference to a new local variable
+
+my_list = [1, 2, 3]
+print('my_list before foo():', my_list)
+foo(my_list)
+print('my_list after foo():', my_list)
+
+my_list = [1, 2, 3]
+print('my_list before bar():', my_list)
+bar(my_list)
+print('my_list after bar():', my_list)
